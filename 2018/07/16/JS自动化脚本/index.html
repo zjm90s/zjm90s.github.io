@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="本文涉及的内容是在第一家工作做的（前后端还未分离），到现在已经很多年了。其实工作中是用不到这些的，纯属个人爱好，现在写到博客里主要也算是做个记录吧。  说到自动化脚本，可能大部分人一下想到是自动化测试脚本python。不过我这里是基于JavaScript来实现的，而且也不是用来做自动化测试的。那能用来做什么呢？ 其实当时是在第一家公司，有时需要在测试环境下几个订单来测试，但由于下一个订单需要点很">
+<meta name="keywords" content="JavaScript,JS书签,自动化脚本">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JS自动化脚本">
+<meta property="og:url" content="https://zjm90s.github.io/2018/07/16/JS自动化脚本/index.html">
+<meta property="og:site_name" content="Zhou">
+<meta property="og:description" content="本文涉及的内容是在第一家工作做的（前后端还未分离），到现在已经很多年了。其实工作中是用不到这些的，纯属个人爱好，现在写到博客里主要也算是做个记录吧。  说到自动化脚本，可能大部分人一下想到是自动化测试脚本python。不过我这里是基于JavaScript来实现的，而且也不是用来做自动化测试的。那能用来做什么呢？ 其实当时是在第一家公司，有时需要在测试环境下几个订单来测试，但由于下一个订单需要点很">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://zjm90s.github.io/2018/07/16/JS自动化脚本/jsmf-mxt.png">
+<meta property="og:updated_time" content="2018-07-24T14:59:17.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JS自动化脚本">
+<meta name="twitter:description" content="本文涉及的内容是在第一家工作做的（前后端还未分离），到现在已经很多年了。其实工作中是用不到这些的，纯属个人爱好，现在写到博客里主要也算是做个记录吧。  说到自动化脚本，可能大部分人一下想到是自动化测试脚本python。不过我这里是基于JavaScript来实现的，而且也不是用来做自动化测试的。那能用来做什么呢？ 其实当时是在第一家公司，有时需要在测试环境下几个订单来测试，但由于下一个订单需要点很">
+<meta name="twitter:image" content="https://zjm90s.github.io/2018/07/16/JS自动化脚本/jsmf-mxt.png">
+
+
+
+
+
+
+  <link rel="canonical" href="https://zjm90s.github.io/2018/07/16/JS自动化脚本/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>JS自动化脚本 | Zhou</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zhou</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">See you</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://zjm90s.github.io/2018/07/16/JS自动化脚本/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="jianming zhou">
+      <meta itemprop="description" content="花落知多少">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zhou">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">JS自动化脚本
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-07-16 22:47:46" itemprop="dateCreated datePublished" datetime="2018-07-16T22:47:46+08:00">2018-07-16</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-07-24 22:59:17" itemprop="dateModified" datetime="2018-07-24T22:59:17+08:00">2018-07-24</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>本文涉及的内容是在第一家工作做的（前后端还未分离），到现在已经很多年了。其实工作中是用不到这些的，纯属个人爱好，现在写到博客里主要也算是做个记录吧。</p>
+</blockquote>
+<p>说到自动化脚本，可能大部分人一下想到是自动化测试脚本python。不过我这里是基于JavaScript来实现的，而且也不是用来做自动化测试的。那能用来做什么呢？</p>
+<p>其实当时是在第一家公司，有时需要在测试环境下几个订单来测试，但由于下一个订单需要点很多次页面还要填很多东西于是就想偷懒。当时正好刚接触JavaScript，准确的来说是jQuery（暴露年代了），发现click可以用来触发点击事件，于是就想通过JS脚本来完成。</p>
+<p>举个简单的例子来演示下，假如有一个关键字输入框和一个搜索按钮如下（这是直接截取的某国内网站的源码）：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 关键字输入框 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">_cqnotice</span>=<span class="string">"（选填）酒店名/地标/商圈"</span> <span class="attr">id</span>=<span class="string">"txtKeyword"</span> <span class="attr">name</span>=<span class="string">"keywordNew"</span> <span class="attr">class</span>=<span class="string">"input_text"</span> <span class="attr">autocomplete</span>=<span class="string">"on"</span> <span class="attr">maxlength</span>=<span class="string">"50"</span> <span class="attr">placeholder</span>=<span class="string">"（选填）酒店名/地标/商圈"</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 搜索按钮 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">value</span>=<span class="string">"搜索"</span> <span class="attr">class</span>=<span class="string">"btn_search"</span> <span class="attr">id</span>=<span class="string">"btnSearch"</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>如果我想搜索火车站附近的酒店，那正常情况需要先在web搜索输入框里手动输入”火车站”，然后点下搜索按钮。</p>
+<p>如果是用JavaScript来实现呢？代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 由于两个元素都有id，基于id是最简单的</span><br><span class="line"><span class="built_in">document</span>.getElementById(<span class="string">"txtKeyword"</span>).value = <span class="string">"火车站"</span>;</span><br><span class="line"><span class="built_in">document</span>.getElementById(<span class="string">"btn_search"</span>).click();</span><br><span class="line"></span><br><span class="line"># 在没有id的网站可以用class等CSS选择器，如</span><br><span class="line"><span class="built_in">document</span>.getElementsByClassName(<span class="string">"input_text"</span>)[<span class="number">1</span>].value = <span class="string">"火车站"</span>;</span><br><span class="line"><span class="built_in">document</span>.getElementsByClassName(<span class="string">"btn_search"</span>)[<span class="number">1</span>].click();</span><br></pre></td></tr></table></figure>
+<p>是不是很简单？</p>
+<p>如果是用jQuery呢？代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 基于id</span><br><span class="line">$(<span class="string">"#txtKeyword"</span>).val(<span class="string">"火车站"</span>);</span><br><span class="line">$(<span class="string">"#btnSearch"</span>).click();</span><br><span class="line"></span><br><span class="line"># 基于class</span><br><span class="line">$(<span class="string">".input_text"</span>)[<span class="number">1</span>].val(<span class="string">"火车站"</span>);</span><br><span class="line">$(<span class="string">".btn_search"</span>)[<span class="number">1</span>].click();</span><br></pre></td></tr></table></figure>
+<p>是不是更简单？这里只是一个很简单的例子，如果页面流程比较多，输入框很多的时候就能体会到好处了。</p>
+<p>那这个代码在什么地方执行呢？搞过开发的肯定知道浏览器的控制台，这里就不多说了，我想说的是有没有优雅点的地方来执行呢？总不能每次执行的时候（这里指的是那种可以多次重复执行的，一次性的除外）还要先打开代码所在文件，把代码复制一遍，然后打开浏览器控制台，粘贴进去，再按回车执行？这一下就5个步骤了！怎么能忍（懒到这种地步也是…）？</p>
+<p>那有什么简单的方式呢？写个浏览器插件？祭出大名鼎鼎的油猴脚本？这些当然可以，但还是嫌麻烦。有没有更简单的方式呢？有——JavaScript书签。</p>
+<p>JavaScript书签其实和普通的书签一样，只不过普通书签就是一个web地址如 <a href="https://www.zhihu.com/" target="_blank" rel="noopener">https://www.zhihu.com/</a> ，而JavaScript书签是一段JavaScript代码。格式如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">javascript:(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="comment">/** code */</span></span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
+<p>将上面那两行代码嵌进来就是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">javascript:(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	$(<span class="string">"#txtKeyword"</span>).val(<span class="string">"火车站"</span>);</span><br><span class="line">	$(<span class="string">"#btnSearch"</span>).click();</span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
+<p>然后在浏览器上新建一个书签，地址就填上这段代码，后面需要用的时候直接点一下书签就行。是不是很简单？</p>
+<p>现在已经是angularJs，react，vue的天下，提倡数据与页面完全分离开来而不直接操作DOM，如果某个网站没有引入jQuery但又不想用原生JavaScript写那么长串的代码有什么办法呢？可以自己手动加载jQuery，如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">javascript: (<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (!($ = <span class="built_in">window</span>.jQuery)) &#123;</span><br><span class="line">		script = <span class="built_in">document</span>.createElement(<span class="string">'script'</span>);</span><br><span class="line">		script.src = <span class="string">'http://ajax.microsoft.com/ajax/jquery/jquery-1.11.1.min.js'</span>;</span><br><span class="line">		script.onload = start;</span><br><span class="line">		<span class="built_in">document</span>.body.appendChild(script);</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		start();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">start</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="comment">/** code */</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;())</span><br></pre></td></tr></table></figure>
+<p>另外发现chrome控制台也支持$(“#id”)这类CSS选择器，不过只能在控制台使用，无法用于JavaScript书签。</p>
+<p>以上用于单页面已经完全够了，如果你想用在多个页面之间就会有问题了。</p>
+<p>第一个问题——JS生命周期问题。</p>
+<p>当从一个页面跳转到另一个页面的时候，你之前的JS生命周期就已经结束了，即使代码还没执行完。那怎么解决呢？我想到的办法是把当前网页内嵌一个iframe中，这样JS脚本就不会随着页面跳转而消亡了。</p>
+<p>这又会引发一个新问题——跨域。</p>
+<p>如果多个页面域不一致就会产生。这个如果是自己电脑执行脚本，可以开启跨域支持。我用的chrome，可如下启动就不会出现跨域问题了：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> windows系统（Win7)：</span><br><span class="line">"C:\Program Files\Google\Chrome\Application\chrome.exe" --args --disable-web-security</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> Linux：</span><br><span class="line">chromium-browser --disable-web-security</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> Mac os：</span><br><span class="line">/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --disable-web-security</span><br><span class="line">或者</span><br><span class="line">open -a "Google Chrome" --args --disable-web-security</span><br></pre></td></tr></table></figure>
+<p>另外还有一个问题——从一个页面到另一个页面后如果立即触发click或其他操作一般是无效的，因为此时新页面还没渲染好。</p>
+<p>简单的做法是加个延迟，但每个页面该延迟多久呢？长了浪费时间，短了又无效。最终实现方式是每个页面自动延迟1秒，通过CSS选择器判断页面是否就绪，如果未就绪则继续等1秒，就绪了就执行新页面的代码，以此类推。</p>
+<p>经过一些抽象简化，最终得到如下JS书签代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line">javascript: (<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (! ($ = <span class="built_in">window</span>.jQuery)) &#123; <span class="comment">//如果页面未引入了jQuery，则动态引入下</span></span><br><span class="line">		script = <span class="built_in">document</span>.createElement(<span class="string">'script'</span>); <span class="comment">//动态创建script标签</span></span><br><span class="line">		script.src = <span class="string">'https://ajax.microsoft.com/ajax/jquery/jquery-1.11.1.min.js'</span>; <span class="comment">//jQuery地址，由于谷歌的国内访问不了了，就用的微软的</span></span><br><span class="line">		script.onload = initFunc; <span class="comment">//script加载后执行initFunc()</span></span><br><span class="line">		<span class="built_in">document</span>.body.appendChild(script); <span class="comment">//将动态生成的script添加到body标签最后</span></span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		initFunc();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">initFunc</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> ($(<span class="string">"#zjm"</span>).size() == <span class="number">0</span>) &#123; <span class="comment">//如果工具条不存在则创建，否则删除</span></span><br><span class="line">			$(<span class="string">"body"</span>).html(<span class="string">' </span></span><br><span class="line"><span class="string">				&lt;span id="zjm"&gt; </span></span><br><span class="line"><span class="string">				&lt;input type="file" id="_file" style="position:absolute;right:77px;z-index:10000;background-color:#FFF;border:1px solid #CDCDCD;height:24px;width:160px;"/&gt; </span></span><br><span class="line"><span class="string">				&lt;input type="button" id="_btn" style="position:absolute;right:17px;z-index:10000;background-color:#FFF;border:1px solid #CDCDCD;height:26px;width:60px;" value="执行"/&gt; </span></span><br><span class="line"><span class="string">				&lt;/span&gt; </span></span><br><span class="line"><span class="string">				&lt;iframe id="_ifrm" src="?" width="100%" frameborder="0"/&gt; </span></span><br><span class="line"><span class="string">			'</span>); <span class="comment">//创建工具条</span></span><br><span class="line">			$(<span class="string">"#_ifrm"</span>).load(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">				<span class="keyword">var</span> height = $(<span class="keyword">this</span>).contents().find(<span class="string">"body"</span>).height() + <span class="number">20</span>;</span><br><span class="line">				$(<span class="keyword">this</span>).height(height &gt; <span class="number">800</span> ? height: <span class="number">800</span>);</span><br><span class="line">			&#125;); <span class="comment">//动态设置iframe高度</span></span><br><span class="line">			<span class="keyword">var</span> f = <span class="built_in">document</span>.getElementById(<span class="string">"_file"</span>);</span><br><span class="line">			f.onchange = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">				<span class="keyword">var</span> fr = <span class="keyword">new</span> FileReader;</span><br><span class="line">				<span class="comment">/*fr.readAsBinaryString(f.files[0]);*/</span></span><br><span class="line">				fr.readAsText(f.files[<span class="number">0</span>]); <span class="comment">//文件读取</span></span><br><span class="line">				fr.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">					$(<span class="string">"#_btn"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="comment">//对“执行”按钮绑定事件</span></span><br><span class="line">						<span class="built_in">eval</span>(fr.result); <span class="comment">//执行本地js文件</span></span><br><span class="line">					&#125;)</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			$(<span class="string">"#zjm"</span>).remove();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/** core */</span></span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">run</span>(<span class="params">container</span>) </span>&#123; <span class="comment">//入口方法</span></span><br><span class="line">		pIndex = <span class="number">0</span>; <span class="comment">//设置页面方法的起始索引</span></span><br><span class="line">		pSize = container.length; <span class="comment">//设置页面方法的最大索引</span></span><br><span class="line">		stop = <span class="literal">false</span>; <span class="comment">//用于判断是否停止整个业务流程</span></span><br><span class="line">		process(container);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">process</span>(<span class="params">container</span>) </span>&#123; <span class="comment">//执行container中的所有页面方法</span></span><br><span class="line">		<span class="keyword">if</span> (!stop &amp;&amp; Index &lt; pSize) &#123;</span><br><span class="line">			waitTime = <span class="number">15</span>; <span class="comment">//最长等待时间，为了以防有的页面加载很久还没加载完。如果超过15秒还没加载完，则主动停止整个自动化流程。</span></span><br><span class="line">			<span class="keyword">if</span> (pIndex == <span class="number">0</span>) &#123; <span class="comment">//登陆页面为了有良好的交互不做延时处理</span></span><br><span class="line">				processExe(container[pIndex++]);</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">					processExe(container[pIndex++])</span><br><span class="line">				&#125;,</span><br><span class="line">				<span class="number">1000</span>); <span class="comment">//1秒后执行processExe(container[pIndex++])，即container中的第pIndex个页面方法</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">processExe</span>(<span class="params">func</span>) </span>&#123; <span class="comment">//执行单个页面</span></span><br><span class="line">		<span class="keyword">if</span> (waitTime &gt; <span class="number">0</span>) &#123; <span class="comment">//当等待时间未超过15秒，则继续等待执行当前页面，否则停止整个业务流程</span></span><br><span class="line">			waitTime--;</span><br><span class="line">			<span class="keyword">if</span> (!func()) &#123; <span class="comment">//如果返回false则继续等待执行当前页面，否则执行下个页面</span></span><br><span class="line">				setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">					processExe(func)</span><br><span class="line">				&#125;,</span><br><span class="line">				<span class="number">1000</span>); <span class="comment">//1秒后递归调用自身</span></span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				process(container); <span class="comment">//执行下个页面</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			stop = <span class="literal">true</span>;</span><br><span class="line">			finish(func);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">setAllVal</span>(<span class="params">ifrm,valMap</span>) </span>&#123; <span class="comment">//填写表单</span></span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">var</span> key <span class="keyword">in</span> valMap) &#123;</span><br><span class="line">			ifrm.find(<span class="string">"input[name='"</span>+key+<span class="string">"']"</span>).val(valMap[key]);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">finish</span>(<span class="params">func</span>) </span>&#123; <span class="comment">//显示业务流程停在哪个步骤（方法）</span></span><br><span class="line">		alert(<span class="string">"Stop at "</span> + func.name);</span><br><span class="line">	&#125;</span><br><span class="line">&#125; (<span class="string">"/**@author jianming.zhou*/"</span>))</span><br></pre></td></tr></table></figure>
+<p>可执行本地JS文件以及支持支持多页面跳转。</p>
+<p>使用时点击该书签，然后右上角会显示一个按钮，如图：</p>
+<p><img src="/2018/07/16/JS自动化脚本/jsmf-mxt.png" alt="选择文件"></p>
+<p>点击“选择文件”加载本地JS文件然后点执行就可以了。</p>
+<p>以下是一个本地JS文件Demo：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** data */</span></span><br><span class="line"><span class="keyword">var</span> loginVal = &#123; <span class="comment">//以Map方式封装页面所需填的数据，最好是每个页面定义一个，如果无数据需要填写可以不用定义</span></span><br><span class="line">	<span class="string">"username"</span>: <span class="string">"zjm"</span>,</span><br><span class="line">	<span class="string">"password"</span>: <span class="string">"111111"</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> createOrderVal = &#123;</span><br><span class="line">	<span class="string">"guestName"</span>: <span class="string">"zjm"</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> payVal = &#123;</span><br><span class="line">	<span class="string">"payPasswd"</span>: <span class="string">"111111"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** page */</span></span><br><span class="line"><span class="keyword">var</span> container = [ <span class="comment">//封装业务流程中的所有方法页面，在下面定义，每个页面定义一个</span></span><br><span class="line">	loginPage,</span><br><span class="line">	toHotelLabel,</span><br><span class="line">	homePage,</span><br><span class="line">	searchPage,</span><br><span class="line">	createOrderPage,</span><br><span class="line">	payPage]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">loginPage</span>(<span class="params"></span>) </span>&#123; <span class="comment">//登陆</span></span><br><span class="line">	<span class="keyword">var</span> $ifrm = $(<span class="string">"#_ifrm"</span>).contents(); <span class="comment">//获取iframe中的html内容</span></span><br><span class="line">	$target = $ifrm.find(<span class="string">"#sbmSignin"</span>); <span class="comment">//找到本页需点击触发的按钮</span></span><br><span class="line">	<span class="keyword">if</span> (<span class="keyword">typeof</span>($target) != <span class="string">"undefined"</span>) &#123; <span class="comment">//如果找到了</span></span><br><span class="line">		setAllVal($ifrm,loginVal); <span class="comment">//填写表单（登陆账号和密码）</span></span><br><span class="line">		$target.click(); <span class="comment">//触发“登陆”按钮</span></span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">toHotelLabel</span>(<span class="params"></span>) </span>&#123; <span class="comment">//进入主页</span></span><br><span class="line">	<span class="keyword">var</span> $ifrm = $(<span class="string">"#_ifrm"</span>).contents();</span><br><span class="line">	<span class="keyword">var</span> $target = $ifrm.find(<span class="string">".main-nav ul li a"</span>)[<span class="number">3</span>];</span><br><span class="line">	<span class="keyword">if</span> ($target.href.contains(<span class="string">"/tops-front-purchaser-hotel//hotel/booking/search"</span>)) &#123;</span><br><span class="line">		$target.click();</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">homePage</span>(<span class="params"></span>) </span>&#123; <span class="comment">//主页</span></span><br><span class="line">	<span class="keyword">var</span> $ifrm = $(<span class="string">"#_ifrm"</span>).contents();</span><br><span class="line">	<span class="keyword">var</span> $target = $ifrm.find(<span class="string">"#btn_search_first"</span>);</span><br><span class="line">	<span class="keyword">if</span> (<span class="keyword">typeof</span>($target) != <span class="string">"undefined"</span>) &#123;</span><br><span class="line">		$target.click();</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">searchPage</span>(<span class="params"></span>) </span>&#123; <span class="comment">//搜索页</span></span><br><span class="line">	<span class="keyword">var</span> $ifrm = $(<span class="string">"#_ifrm"</span>).contents();</span><br><span class="line">	<span class="keyword">var</span> $target = $ifrm.find(<span class="string">".roomTypeDetailContainer a.mediumOrange_btn"</span>)[<span class="number">1</span>]; <span class="comment">//此页结果会有很多，此处随意选择预订第二个</span></span><br><span class="line">	<span class="keyword">if</span> (<span class="keyword">typeof</span>($target) != <span class="string">"undefined"</span>) &#123;</span><br><span class="line">		$target.click();</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createOrderPage</span>(<span class="params"></span>) </span>&#123; <span class="comment">//建单页</span></span><br><span class="line">	<span class="keyword">var</span> $ifrm = $(<span class="string">"#_ifrm"</span>).contents();</span><br><span class="line">	<span class="keyword">var</span> $target = $ifrm.find(<span class="string">"#l_btn"</span>)[<span class="number">0</span>]; <span class="comment">//需要说明的是，对于“a”标签（可以看页面，有的按钮是input，有的是a）即使用id获取的也需要在后面加上[0]（即第一个，其实也只有一个），否则无法触发click事件</span></span><br><span class="line">	<span class="keyword">if</span> (<span class="keyword">typeof</span>($target) != <span class="string">"undefined"</span>) &#123;</span><br><span class="line">		setAllVal($ifrm,createOrderVal);</span><br><span class="line">		$target.click();</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">payPage</span>(<span class="params"></span>) </span>&#123; <span class="comment">//支付页</span></span><br><span class="line">	<span class="keyword">var</span> $ifrm = $(<span class="string">"#_ifrm"</span>).contents();</span><br><span class="line">	<span class="keyword">var</span> $target = $ifrm.find(<span class="string">".adaptiveButton.ac-payAffirm"</span>)[<span class="number">0</span>]; <span class="comment">//此处也是a标签</span></span><br><span class="line">	<span class="keyword">if</span> (<span class="keyword">typeof</span>($target) != <span class="string">"undefined"</span>) &#123;</span><br><span class="line">		setAllVal($ifrm,payVal);</span><br><span class="line">		$target.click();</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** 执行入口 */</span></span><br><span class="line">start(container);</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JavaScript/" rel="tag"># JavaScript</a>
+          
+            <a href="/tags/JS书签/" rel="tag"># JS书签</a>
+          
+            <a href="/tags/自动化脚本/" rel="tag"># 自动化脚本</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/11/我的Q仿界面/" rel="next" title="我的Q仿界面">
+                <i class="fa fa-chevron-left"></i> 我的Q仿界面
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/22/JS分屏插件/" rel="prev" title="JS分屏插件">
+                JS分屏插件 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="jianming zhou" />
+            
+              <p class="site-author-name" itemprop="name">jianming zhou</p>
+              <p class="site-description motion-element" itemprop="description">花落知多少</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/zjm90s" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:zjm90s@163.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">jianming zhou</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Mist</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
